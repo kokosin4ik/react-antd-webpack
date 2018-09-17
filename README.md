@@ -8,6 +8,9 @@ Boilerplate repo with
 
 Webpack 4 used for build
 
-npm start - is running dev server
 
-npm run build - is building the project
+npm i - to download and install dependencies
+
+npm start - to start development server
+
+npm run build - to build the project

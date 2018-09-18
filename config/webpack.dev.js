@@ -6,7 +6,7 @@ module.exports = (env, argv) => ({
   entry: {
     main: ["./src/index.js"]
   },
-  mode: argv.mode !== 'production' ? 'development' : argv.mode,
+  mode: argv.mode !== "production" ? "development" : argv.mode,
   output: {
     filename: "[name]-bundle.js",
     path: path.resolve(__dirname, "../dist")
@@ -23,13 +23,40 @@ module.exports = (env, argv) => ({
   module: {
     rules: [
       {
+        loader: "babel-loader",
+        exclude: /node_modules/,
         test: /\.js$/,
-        use: "babel-loader",
-        exclude: /node_modules/
+        options: {
+          presets: ["@babel/preset-env", "@babel/preset-react"],
+          plugins: [["import", { libraryName: "antd", style: true }]]
+        }
       },
       {
         test: /\.scss$/,
-        use: ["style-loader", "css-loader", "sass-loader"]
+        loaders: ["style-loader", "css-loader", "sass-loader"]
+      },
+      {
+        test: /\.less$/,
+        use: [
+          {
+            loader: "style-loader" // creates style nodes from JS strings
+          },
+          {
+            loader: "css-loader" // translates CSS into CommonJS
+          },
+          {
+            loader: "less-loader", // compiles Less to CSS
+            options: {
+              javascriptEnabled: true,
+              modifyVars: {
+                // Example:
+                // "@btn-padding-base": "0 8px",
+                // "@btn-padding-sm": "0 8px",
+                // "@btn-padding-lg": "0 8px"
+              }
+            }
+          }
+        ]
       },
       {
         test: /\.html/,
@@ -61,7 +88,7 @@ module.exports = (env, argv) => ({
       template: "./src/index.html"
     }),
     new webpack.DefinePlugin({
-      PRODUCTION: argv.mode === 'production'
+      PRODUCTION: argv.mode === "production"
     })
   ]
 });
